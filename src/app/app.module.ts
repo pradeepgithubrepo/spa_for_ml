@@ -11,12 +11,14 @@ import { MainComponentComponent } from './mainpage/main-component/main-component
 import { ReactiveFormsModule } from '@angular/forms';
 import { MlsrvcService } from './mlsrvc.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { EditComponentComponent } from './mainpage/edit-component/edit-component.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponentComponent,
-    MainComponentComponent
+    MainComponentComponent,
+    EditComponentComponent
   ],
   imports: [
     BrowserModule,
