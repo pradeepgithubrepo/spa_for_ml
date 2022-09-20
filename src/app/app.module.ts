@@ -12,12 +12,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MlsrvcService } from './mlsrvc.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { EditComponentComponent } from './mainpage/edit-component/edit-component.component';
+import { DialogConfirm } from './dialog/dialog_confirm'
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponentComponent,
     MainComponentComponent,
+    DialogConfirm,
     EditComponentComponent
   ],
   imports: [

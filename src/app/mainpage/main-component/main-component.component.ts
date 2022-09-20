@@ -3,7 +3,9 @@ import { FormControl, FormGroup, NgForm, NgModel } from '@angular/forms';
 import { MlsrvcService } from 'src/app/mlsrvc.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NavigationExtras, Router } from '@angular/router';
-3
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogConfirm } from 'src/app/dialog/dialog_confirm'
+
 @Component({
   selector: 'app-main-component',
   template: `
@@ -24,8 +26,8 @@ import { NavigationExtras, Router } from '@angular/router';
     <br/>
 
     <div class="row" *ngIf="warmup == 1">
-    <div class="col-md-2 mb-12"></div>
-      <div class="col-md-8 mb-12">
+    <div class="col-md-1 mb-12"></div>
+      <div class="col-md-10 mb-12">
           <table class="table table-striped">
             <thead>
             <tr>
@@ -39,13 +41,13 @@ import { NavigationExtras, Router } from '@angular/router';
               <td scope="row">{{ i + 1 }}</td>
               <td style="word-wrap: break-word;">{{ pd.filename}}</td>
               <td><button class="btn btn-info" (click)="mlprocess($event,pd.filename,pd.columnnames)">Process</button> </td>
+               <td><button class="btn btn-info" (click)="viewconfig(pd.filename)">View</button> </td>
             </tbody>
           </table>
       </div>
-    <div class="col-md-2 mb-12"></div>
+    <div class="col-md-1 mb-12"></div>
     </div>
   </div>
-
   <ngx-spinner
   bdColor="rgba(51,51,51,0.8)"
   size="medium"
@@ -57,13 +59,16 @@ import { NavigationExtras, Router } from '@angular/router';
     img {
       width: 400px;
       height: 200px;
-    }`
+    }
+    `
   ]
 })
 export class MainComponentComponent implements OnInit {
 
   warmup = 0
   spinnercontent = "Processing!!!"
+  modeltitle = "Info!!"
+  modelbody = "CDM Mapping not generated for this File."
   processdata = [{ "filename": "sourcekey", "columnnames": "cdm_key" }]
 
   public schemaForm = new FormGroup({
@@ -86,6 +91,35 @@ export class MainComponentComponent implements OnInit {
         .then(success => console.log('navigation success?', success))
         .catch(console.error);
     })
+  }
+
+  viewconfig(filename: String) {
+    var postdata = { "filename": filename }
+    var formData: any = new FormData();
+    formData.append('postdata', JSON.stringify(postdata))
+    this.spinnerService.show();
+    this.spinnercontent = "Retreving CDM Mapping...."
+    this.mlsrvcService.getprocessfile(formData).subscribe(data => {
+      this.spinnerService.hide();
+      const processjson = JSON.parse(data)[0]
+      console.log(String(processjson))
+      if (String(processjson) != "undefined") {
+        const queryParams = { processedfilename: filename };
+        this.router.navigate(['/editconfig'], { queryParams: queryParams })
+          .then(success => console.log('navigation success?', success))
+          .catch(console.error);
+      } else {
+        const confirmmodalRef = this.modalService.open(DialogConfirm, { scrollable: true });
+        confirmmodalRef.componentInstance.my_modal_title = 'Info!!';
+        confirmmodalRef.componentInstance.my_modal_content = 'CDM Mapping not generated for this File.';
+      }
+
+    }, err => {
+      const confirmmodalRef = this.modalService.open(DialogConfirm, { scrollable: true });
+      confirmmodalRef.componentInstance.my_modal_title = 'Info!!';
+      confirmmodalRef.componentInstance.my_modal_content = 'CDM Mapping not generated for this File.';
+    }
+    );
   }
 
   public schemafunc(): void {
@@ -123,7 +157,8 @@ export class MainComponentComponent implements OnInit {
 
   imageSrc = 'assets/ai.png'
 
-  constructor(private mlsrvcService: MlsrvcService, private spinnerService: NgxSpinnerService, private router: Router) {
+  constructor(private mlsrvcService: MlsrvcService, private spinnerService: NgxSpinnerService, private router: Router,
+    private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
