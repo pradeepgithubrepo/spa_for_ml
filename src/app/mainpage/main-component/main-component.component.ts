@@ -79,18 +79,59 @@ export class MainComponentComponent implements OnInit {
   }
 
   mlprocess(event: Event, filename: String, rawcols: String) {
-    var postdata = { "filename": filename, "rawcols": rawcols }
+
+
+    var postdata = { "filename": filename }
     var formData: any = new FormData();
     formData.append('postdata', JSON.stringify(postdata))
-    this.spinnerService.show();
-    this.spinnercontent = "Identifying CDM Mapping...."
-    this.mlsrvcService.processml(formData).subscribe(data => {
-      console.log("View data -> " + JSON.stringify(data))
-      const queryParams = { processedfilename: filename };
-      this.router.navigate(['/editconfig'], { queryParams: queryParams })
-        .then(success => console.log('navigation success?', success))
-        .catch(console.error);
-    })
+    this.mlsrvcService.getprocessfile(formData).subscribe(data => {
+      const processjson = JSON.parse(data)[0]
+      // const srcfile = processjson['filename']
+      if (String(processjson) == "undefined") {
+        var postdata = { "filename": filename, "rawcols": rawcols }
+        var formData: any = new FormData();
+        formData.append('postdata', JSON.stringify(postdata))
+        this.spinnerService.show();
+        this.spinnercontent = "Identifying CDM Mapping...."
+        this.mlsrvcService.processml(formData).subscribe(data => {
+          console.log("View data -> " + JSON.stringify(data))
+          const queryParams = { processedfilename: filename };
+          this.router.navigate(['/editconfig'], { queryParams: queryParams })
+            .then(success => console.log('navigation success?', success))
+            .catch(console.error);
+        })
+      } else {
+        const confirmmodalRef = this.modalService.open(DialogConfirm, { scrollable: true });
+        confirmmodalRef.componentInstance.my_modal_title = 'Alert!';
+        confirmmodalRef.componentInstance.my_modal_content = 'CDM mapping already generated for this file. Clicking ok will reprocess the CDM Mapping. Do you wish to continue ';
+
+        confirmmodalRef.result.then((result) => {
+          var postdata = { "filename": filename, "rawcols": rawcols }
+          var formData: any = new FormData();
+          formData.append('postdata', JSON.stringify(postdata))
+          this.spinnerService.show();
+          this.spinnercontent = "Identifying CDM Mapping...."
+          this.mlsrvcService.processml(formData).subscribe(data => {
+            console.log("View data -> " + JSON.stringify(data))
+            const queryParams = { processedfilename: filename };
+            this.router.navigate(['/editconfig'], { queryParams: queryParams })
+              .then(success => console.log('navigation success?', success))
+              .catch(console.error);
+          })
+        }, (reason) => {
+          console.log(`Dismissed : ${reason}`);
+        });
+
+
+      }
+
+    }, err => {
+
+    }
+    );
+
+
+
   }
 
   viewconfig(filename: String) {

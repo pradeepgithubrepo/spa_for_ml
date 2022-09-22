@@ -54,7 +54,7 @@ import { Location } from '@angular/common';
               <th scope="col">#</th>
               <th scope="col">SourceKey</th>
               <th scope="col">CDMKey</th>
-              <th scope="col">CosineQuotient</th>
+              <th scope="col">Confidence Level</th>
               <th scope="col">Mapping Status</th>
     </tr>
     <tbody formArrayName="Rows">
@@ -71,12 +71,21 @@ import { Location } from '@angular/common';
           />
         </td>
         <td>
+        <div *ngIf='obj.value.comment == "Mapping confirmed"' >
           <input
             type="text"
             class="form-control"
             id="cdm_key"
             formControlName="cdm_key"
           />
+        </div>
+        <div *ngIf='obj.value.comment !== "Mapping confirmed"' >
+            
+          <select formControlName="cdm_key" class="form-control">  
+                <option><b>Select CDM Key</b></option>  
+                <option *ngFor="let web of validcdmcols">{{web}}</option>  
+          </select>  
+        </div>
         </td>
         <td>
           <input
@@ -88,7 +97,7 @@ import { Location } from '@angular/common';
         </td>
         <td>
           <input
-            type="text"
+            type="textarea"
             class="form-control"
             id="comment"
             formControlName="comment"
@@ -104,8 +113,11 @@ import { Location } from '@angular/common';
       </tr>
     </tbody>
   </table>
+     
   <div class="col-md-4 mb-12"> </div>
+
   <div class="col-md-8 mb-12">
+     <br/>
   <button type="button" (click)="addNewRow()" class="btn btn-dark">
     Add new Row
   </button>
@@ -142,6 +154,7 @@ export class EditComponentComponent implements OnInit {
   cdmtable: String = ""
   spinnercontent = "Processing!!!"
   warmup = 0
+  validcdmcols = ["meternum", "accountnumer", "goldernumber"]
 
   constructor(private mlsrvcService: MlsrvcService, private spinnerService: NgxSpinnerService,
     private router: Router, private formBuilder: FormBuilder, private route: ActivatedRoute
@@ -189,6 +202,14 @@ export class EditComponentComponent implements OnInit {
       this.processdata = JSON.parse(processjson['res'])
       console.log(this.processdata)
       this.loaddata()
+
+      postdata = { "filename": this.cdmtable }
+      var formData: any = new FormData();
+      formData.append('postdata', JSON.stringify(postdata))
+      this.mlsrvcService.getcdmkeys(formData).subscribe(data => {
+        const cdmkeys = data
+        this.validcdmcols = cdmkeys.split(',');
+      })
     }, err => {
 
     }

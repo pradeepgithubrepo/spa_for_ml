@@ -31,6 +31,10 @@ export class MlsrvcService {
     return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/updprocessfile', postData)
   };
 
+  getcdmkeys(postData: any) {
+    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getcdmkeylist', postData)
+  };
+
 
 
 }
