@@ -106,6 +106,7 @@ import { Location } from '@angular/common';
         </td>
         <td>
           <input
+            [readonly]="true" 
             type="label"
             class="form-control"
             id="stagdatatype"
