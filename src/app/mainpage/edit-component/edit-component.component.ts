@@ -34,7 +34,7 @@ import { Location } from '@angular/common';
     </div>
     <div class="col-md-4 mb-12">
         <ngb-alert [dismissible]="false">
-    Traget CDM Table : <br/>
+    Target CDM Table : <br/>
     <strong>{{cdmtable}}</strong>
   </ngb-alert>
     </div>
@@ -46,8 +46,7 @@ import { Location } from '@angular/common';
     <br/>
     
     <div class="row" *ngIf="warmup == 1">
-    <div class="col-md-2 mb-12"></div>
-<div class="col-md-8 mb-12">
+<div class="col-md-12 mb-12">
 <form [formGroup]="mappingGroup" class="row justify-content-center" (ngSubmit)="onSubmit()">
   <table class="form-group">
     <tr>
@@ -56,6 +55,8 @@ import { Location } from '@angular/common';
               <th scope="col">CDMKey</th>
               <th scope="col">Confidence Level</th>
               <th scope="col">Mapping Status</th>
+              <th scope="col">Target DataType</th>
+              <th scope="col">Target Transformation</th>
     </tr>
     <tbody formArrayName="Rows">
       <tr
@@ -104,6 +105,23 @@ import { Location } from '@angular/common';
           />
         </td>
         <td>
+          <input
+            type="label"
+            class="form-control"
+            id="stagdatatype"
+            formControlName="stagdatatype"
+          />
+        </td>
+        <td>
+
+                  <select formControlName="stagtransform" class="form-control">  
+                <option><b>{{obj.value.stagtransform}}</b></option>  
+                <option *ngFor="let a of transformlist">{{a}}</option>  
+          </select>   
+
+
+        </td>
+        <td>
           <button
             (click)="deleteRow(i)"
             class="btn btn-danger">
@@ -114,9 +132,9 @@ import { Location } from '@angular/common';
     </tbody>
   </table>
      
-  <div class="col-md-4 mb-12"> </div>
+  <div class="col-md-5 mb-12"> </div>
 
-  <div class="col-md-8 mb-12">
+  <div class="col-md-7 mb-12">
      <br/>
   <button type="button" (click)="addNewRow()" class="btn btn-dark">
     Add new Row
@@ -128,7 +146,6 @@ import { Location } from '@angular/common';
 </div>
 
 
-    <div class="col-md-2 mb-12"></div>
     </div>
 
 
@@ -146,8 +163,9 @@ import { Location } from '@angular/common';
     }`
   ]
 })
+
 export class EditComponentComponent implements OnInit {
-  processdata = [{ "sourcekey": "sourcekey", "cdm_key": "cdm_key", "cosine_quotient": "cosine_quotient", "comment": "comment" }]
+  processdata = [{ "sourcekey": "sourcekey", "cdm_key": "cdm_key", "cosine_quotient": "cosine_quotient", "comment": "comment", "stagdatatype": "stagdatatype", "stagtransform": "stagtransform" }]
   processedfilename: String = "";
   rawcols: String = ""
   srcfile: String = ""
@@ -155,6 +173,7 @@ export class EditComponentComponent implements OnInit {
   spinnercontent = "Processing!!!"
   warmup = 0
   validcdmcols = ["meternum", "accountnumer", "goldernumber"]
+  transformlist = ["trim", "lower", "upper", "concat", "abs", "ceil", "floor", "round", "dayofmonth", "year", "month", "second", "hour", "todate", "trunc"]
 
   constructor(private mlsrvcService: MlsrvcService, private spinnerService: NgxSpinnerService,
     private router: Router, private formBuilder: FormBuilder, private route: ActivatedRoute
@@ -180,7 +199,9 @@ export class EditComponentComponent implements OnInit {
       sourcekey: ['sourcekey'],
       cdm_key: ['cdm_key'],
       cosine_quotient: ['cosine_quotient'],
-      comment: ['comment']
+      comment: ['comment'],
+      stagdatatype: ['stagdatatype'],
+      stagtransform: ['stagtransform']
     });
   }
 
@@ -229,7 +250,9 @@ export class EditComponentComponent implements OnInit {
       sourcekey: [obj.sourcekey],
       cdm_key: [obj.cdm_key],
       cosine_quotient: [obj.cosine_quotient],
-      comment: [obj.comment]
+      comment: [obj.comment],
+      stagdatatype: [obj.stagdatatype],
+      stagtransform: [obj.stagtransform]
     });
   }
 
@@ -257,7 +280,9 @@ export class EditComponentComponent implements OnInit {
       sourcekey: 'sourcekey',
       cdm_key: 'cdm_key',
       cosine_quotient: 'cosine_quotient',
-      comment: 'comment'
+      comment: 'comment',
+      stagdatatype: 'stagdatatype',
+      stagtransform: 'stagtransform'
     };
     this.formArr.push(this.addRow(obj1));
   }
