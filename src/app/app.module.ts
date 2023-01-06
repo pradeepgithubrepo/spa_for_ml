@@ -12,7 +12,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MlsrvcService } from './mlsrvc.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { EditComponentComponent } from './mainpage/edit-component/edit-component.component';
-import { DialogConfirm } from './dialog/dialog_confirm'
+import { DialogConfirm } from './dialog/dialog_confirm';
+import { ScrawlComponentComponent } from './mainpage/scrawl-component/scrawl-component.component'
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,8 @@ import { DialogConfirm } from './dialog/dialog_confirm'
     HeaderComponentComponent,
     MainComponentComponent,
     DialogConfirm,
-    EditComponentComponent
+    EditComponentComponent,
+    ScrawlComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +33,13 @@ import { DialogConfirm } from './dialog/dialog_confirm'
     NgbModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FormlyBootstrapModule,
+    FormlyModule.forRoot({
+      validationMessages: [
+        { name: 'required', message: 'This field is required' },
+      ],
+    }),
   ],
   providers: [MlsrvcService],
   bootstrap: [AppComponent]

@@ -8,6 +8,10 @@ import { Component, OnInit } from '@angular/core';
     <ul class="navbar-nav">
       <li class="nav-item active">
         <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item active">
+        <a class="nav-link" routerLink="scrawler">Schema Crawler</a>
+      </li> 
     </ul>
   </div>
 </nav>

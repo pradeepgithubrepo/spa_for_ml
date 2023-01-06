@@ -35,6 +35,8 @@ export class MlsrvcService {
     return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getcdmkeylist', postData)
   };
 
-
+  invokeadb(postData: any) {
+    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/invokeadb', postData)
+  };
 
 }
