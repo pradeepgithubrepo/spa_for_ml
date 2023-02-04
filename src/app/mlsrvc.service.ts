@@ -15,28 +15,35 @@ export class MlsrvcService {
     // var processdata = JSON.stringify(postData);
     // var formData = new FormData();
     // formData.append("postData", postData);
-    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/process', postData)
+
+    return this.http.post<any>('http://52.159.115.117:5000/process', postData)
+    // return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/process', postData)
   };
 
   getfilelist() {
-    return this.http.get<any>('http://pradeep.southindia.cloudapp.azure.com:5000/listfiles')
+    return this.http.get<any>('http://52.159.115.117:5000/listfiles')
+    // return this.http.get<any>('http://pradeep.southindia.cloudapp.azure.com:5000/listfiles')
   };
 
 
   getprocessfile(postData: any) {
-    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getprocessfile', postData)
+    return this.http.post<any>('http://52.159.115.117:5000/getprocessfile', postData)
+    // return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getprocessfile', postData)
   };
 
   updateprocessfile(postData: any) {
-    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/updprocessfile', postData)
+    return this.http.post<any>('http://52.159.115.117:5000/updprocessfile', postData)
+    // return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/updprocessfile', postData)
   };
 
   getcdmkeys(postData: any) {
-    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getcdmkeylist', postData)
+    return this.http.post<any>('http://52.159.115.117:5000/getcdmkeylist', postData)
+    // return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/getcdmkeylist', postData)
   };
 
   invokeadb(postData: any) {
-    return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/invokeadb', postData)
+    return this.http.post<any>('http://52.159.115.117:5000/invokeadb', postData)
+    // return this.http.post<any>('http://pradeep.southindia.cloudapp.azure.com:5000/invokeadb', postData)
   };
 
 }
